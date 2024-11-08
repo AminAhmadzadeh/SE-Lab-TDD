@@ -1,6 +1,5 @@
 package ir.selab.tdd;
 
-import ir.selab.tdd.domain.User;
 import ir.selab.tdd.repository.UserRepository;
 import ir.selab.tdd.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +18,7 @@ public class UserServiceTest {
         userService = new UserService(userRepository);
         userService.registerUser("admin", "1234");
         userService.registerUser("ali", "qwert");
+        userService.registerUser("amin", "qwert", "amin@sharif.edu");
     }
 
     @Test
@@ -34,6 +34,24 @@ public class UserServiceTest {
         String username = "ali";
         String password = "123abc";
         boolean b = userService.registerUser(username, password);
+        assertFalse(b);
+    }
+
+    @Test
+    public void createNewValidUserWithEmail__ShouldSuccess() {
+        String username = "reza";
+        String password = "123abc";
+        String email = "reza@sharif.edu";
+        boolean b = userService.registerUser(username, password, email);
+        assertTrue(b);
+    }
+
+    @Test
+    public void createNewDuplicateUserWithEmail__ShouldFail() {
+        String username = "mohammad";
+        String password = "qwert";
+        String email = "amin@sharif.edu";
+        boolean b = userService.registerUser(username, password, email);
         assertFalse(b);
     }
 
@@ -54,4 +72,8 @@ public class UserServiceTest {
         boolean login = userService.loginWithUsername("ahmad", "abcd");
         assertFalse(login);
     }
+
+    /*
+        TODO: use getAllUsers() and removeUser() in other tests to be covered
+     */
 }
