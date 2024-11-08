@@ -18,7 +18,7 @@ public class UserService {
         return userByUsername.getPassword().equals(password);
     }
 
-    public boolean loginWithEmail(String username, String password) {
+    public boolean loginWithEmail(String email, String password) {
         // TODO: implement login with email. return true if username and password are valid.
         return false;
     }
@@ -29,19 +29,18 @@ public class UserService {
     }
 
     public boolean registerUser(String username, String password, String email) {
-        User user = new User(username, password);
-        user.setEmail(email);
+        User user = new User(username, password, email);
         return repository.addUser(user);
     }
 
     public boolean removeUser(String username) {
         // TODO: implement
-        return false;
+        return repository.removeUser(username);
     }
 
     public List<User> getAllUsers() {
         // TODO: implement
-        return null;
+        return repository.getAllUsers();
     }
 
     public boolean changeUserEmail(String username, String newEmail) {

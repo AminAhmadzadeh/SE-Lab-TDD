@@ -16,7 +16,7 @@ public class UserRepositoryTest {
     @BeforeEach
     public void setUp() {
         List<User> userList = Arrays.asList(
-                new User("admin", "1234"),
+                new User("admin", "1234", "admin@sharif.edu"),
                 new User("ali", "qwert"),
                 new User("mohammad", "123asd"));
         repository = new UserRepository(userList);
@@ -37,6 +37,20 @@ public class UserRepositoryTest {
     }
 
     @Test
+    public void getContainingUserByEmail__ShouldReturn() {
+        User ali = repository.getUserByEmail("admin@sharif.edu");
+        assertNotNull(ali);
+        assertEquals("admin", ali.getUsername());
+        assertEquals("1234", ali.getPassword());
+    }
+
+    @Test
+    public void getNotContainingUserByEmail__ShouldReturnNull() {
+        User user = repository.getUserByUsername("reza@sharif.edu");
+        assertNull(user);
+    }
+
+    @Test
     public void createRepositoryWithDuplicateUsers__ShouldThrowException() {
         User user1 = new User("ali", "1234");
         User user2 = new User("ali", "4567");
@@ -46,19 +60,48 @@ public class UserRepositoryTest {
     }
 
     @Test
+    public void createRepositoryWithDuplicateEmails__ShouldThrowException() {
+        User user1 = new User("ali", "1234", "mail@sharif.edu");
+        User user2 = new User("amin", "1234", "mail@sharif.edu");
+        assertThrows(IllegalArgumentException.class, () -> {
+            new UserRepository(List.of(user1, user2));
+        });
+    }
+
+    @Test
+    public void removeContainingUser__ShouldReturnTrue() {
+        User user = new User("akbar", "1234", "akbar@sharif.edu");
+        repository.addUser(user);
+        boolean b = repository.removeUser("ali");
+        assertTrue(b);
+    }
+
+    @Test
+    public void removeNotContainingUser__ShouldReturnFalse() {
+        boolean b = repository.removeUser("asqar");
+        assertFalse(b);
+    }
+
+    @Test
     public void addNewUser__ShouldIncreaseUserCount() {
         int oldUserCount = repository.getUserCount();
-
-        // Given
-        String username = "reza";
-        String password = "123abc";
-        String email = "reza@sharif.edu";
-        User newUser = new User(username, password);
-
-        // When
+        User newUser = new User("reza", "123abc");
         repository.addUser(newUser);
-
-        // Then
         assertEquals(oldUserCount + 1, repository.getUserCount());
+    }
+
+    @Test
+    public void removeUser__ShouldDecreaseUserCount() {
+        int oldUserCount = repository.getUserCount();
+        repository.removeUser("mohammad");
+        assertEquals(oldUserCount - 1, repository.getUserCount());
+    }
+
+
+    @Test
+    public void getAllUsers__ShouldNotReturnNullAndEmpty() {
+        List<User> allUsers = repository.getAllUsers();
+        assertNotNull(allUsers);
+        assertFalse(allUsers.isEmpty());
     }
 }
