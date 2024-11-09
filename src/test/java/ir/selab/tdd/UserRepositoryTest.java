@@ -104,4 +104,10 @@ public class UserRepositoryTest {
         assertNotNull(allUsers);
         assertFalse(allUsers.isEmpty());
     }
+
+    @Test
+    public void changeUserEmailWithInvalidUsername__ShouldReturnFalse() {
+        boolean b = repository.changeUserEmail("babak", "babak@sharif.edu");
+        assertFalse(b);
+    }
 }
