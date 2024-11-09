@@ -52,4 +52,14 @@ public class UserRepository {
     public List<User> getAllUsers() {
         return usersByUserName.values().stream().toList();
     }
+
+    public boolean changeUserEmail(String username, String newEmail) {
+        User user = usersByUserName.get(username);
+        if (Objects.isNull(user)) return false;
+        String oldEmail = user.getEmail();
+        usersByEmail.remove(oldEmail);
+        user.setEmail(newEmail);
+        usersByEmail.put(newEmail, user);
+        return true;
+    }
 }
