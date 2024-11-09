@@ -5,6 +5,7 @@ import ir.selab.tdd.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class UserService {
@@ -36,18 +37,19 @@ public class UserService {
     }
 
     public boolean removeUser(String username) {
-        // TODO: implement
         return repository.removeUser(username);
     }
 
     public List<User> getAllUsers() {
-        // TODO: implement
         return repository.getAllUsers();
     }
 
     public boolean changeUserEmail(String username, String newEmail) {
-        // TODO: implement (if user exists and user's email is valid, then change email)
-        // TODO: after changing user's email, user must be able to login with new email.
-        return false;
+        User user = repository.getUserByUsername(username);
+        if (Objects.isNull(user))
+            return false;
+        if (Objects.nonNull(repository.getUserByEmail(newEmail)))
+            return false;
+        return repository.changeUserEmail(username, newEmail);
     }
 }
