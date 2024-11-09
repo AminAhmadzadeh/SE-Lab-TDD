@@ -73,6 +73,24 @@ public class UserServiceTest {
         assertFalse(login);
     }
 
+    @Test
+    public void loginWithValidEmailAndPassword__ShouldSuccess() {
+        boolean login = userService.loginWithEmail("amin@sharif.edu", "qwert");
+        assertTrue(login);
+    }
+
+    @Test
+    public void loginWithValidEmailAndInvalidPassword__ShouldFail() {
+        boolean login = userService.loginWithEmail("amin@sharif.edu", "abcd");
+        assertFalse(login);
+    }
+    
+    @Test
+    public void loginWithInvalidEmailAndInvalidPassword__ShouldFail() {
+        boolean login = userService.loginWithEmail("ahmad@sharif.edu", "abcd");
+        assertFalse(login);
+    }
+
     /*
         TODO: use getAllUsers() and removeUser() in other tests to be covered
      */
