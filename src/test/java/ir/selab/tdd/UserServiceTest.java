@@ -1,5 +1,6 @@
 package ir.selab.tdd;
 
+import ir.selab.tdd.domain.User;
 import ir.selab.tdd.repository.UserRepository;
 import ir.selab.tdd.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ public class UserServiceTest {
         UserRepository userRepository = new UserRepository(List.of());
         userService = new UserService(userRepository);
         userService.registerUser("admin", "1234");
-        userService.registerUser("ali", "qwert");
+        userService.registerUser("ali", "qwert", "ali@sharif.edu");
         userService.registerUser("amin", "qwert", "amin@sharif.edu");
     }
 
@@ -91,7 +92,40 @@ public class UserServiceTest {
         assertFalse(login);
     }
 
-    /*
-        TODO: use getAllUsers() and removeUser() in other tests to be covered
-     */
+    @Test
+    public void changeUserEmailWithValidUsernameAndValidEmail_ShouldSuccess() {
+        boolean changed = userService.changeUserEmail("amin", "amin@gmail.com");
+        assertTrue(changed);
+        boolean login = userService.loginWithEmail("amin@gmail.com", "qwert");
+        assertTrue(login);
+    }
+
+    @Test
+    public void changeUserEmailWithInvalidUsername_ShouldFail() {
+        boolean changed = userService.changeUserEmail("akbar", "akabr@gmail.com");
+        assertFalse(changed);
+    }
+
+    @Test
+    public void changeUserEmailWithDuplicateEmail_ShouldFail() {
+        boolean changed = userService.changeUserEmail("amin", "ali@sharif.edu");
+        assertFalse(changed);
+    }
+
+    @Test
+    public void removeValidUser__ShouldSuccess() {
+        String username = "mohammad";
+        String password = "123abc";
+        boolean registered = userService.registerUser(username, password);
+        assertTrue(registered);
+        boolean removed = userService.removeUser(username);
+        assertTrue(removed);
+    }
+
+    @Test
+    public void getAllUsers__ShouldNotReturnNullAndEmpty() {
+        List<User> allUsers = userService.getAllUsers();
+        assertNotNull(allUsers);
+        assertFalse(allUsers.isEmpty());
+    }
 }
